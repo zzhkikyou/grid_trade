@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网格交易-确认操作</title>
+    <style>
+
+        html,
+        body {
+            height: 100%;
+            height: 100%;
+            background-image: linear-gradient(to right, #fbc2eb, #a6c1ee);
+        }
+
+        .deal {
+            width: 400px;
+            height: 588px;
+            border-radius: 15px;
+            padding: 0 50px;
+            position: relative;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+        }
+
+        .header {
+            font-size: 38px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 100px;    
+            position: absolute;
+            left: 34%;
+            top: 7%;
+            color: #4a4a4a;
+        }
+
+        .header2 {
+            font-size: 50px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 100px;    
+            position: absolute;
+            top: 15%;
+            width: 100%;
+            color: #4a4a4a;
+        }
+
+        input {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            outline: none;
+            border: none;
+            box-sizing: border-box;
+            padding-left: 5px;
+            background-color: #4a4a4a;
+            color: #61dafb;
+            caret-color: #61dafb;
+        }
+
+        input::placeholder {
+            color: #f2f7f8;
+        }
+
+        span {
+            position: absolute;
+            content: "";
+            display: block;
+            background-color: #4a4a4a;
+            transition: transform .1s ease-in-out;
+        }
+
+        .top,
+        .bottom {
+            left: 0px;
+            right: 0px;
+            height: 2px;
+        }
+
+        .left,
+        .right {
+            top: 0px;
+            bottom: 0px;
+            width: 2px;
+            transform: scaleY(0);
+        }
+
+        .top {
+            top: 0px;
+            transform: scaleX(0);
+            transform-origin: left center;
+            transition-delay: .2s;
+        }
+
+        .left {
+            left: 0px;
+            transform-origin: bottom center;
+            transition-delay: .3s;
+        }
+
+        .bottom {
+            bottom: 0px;
+        }
+
+        .right {
+            right: 0px;
+            transform-origin: top center;
+            transition-delay: .1s;
+        }
+
+        input:focus~.right {
+            transform: scaleY(1);
+            transform-origin: bottom center;
+        }
+
+        input:focus~.left {
+            transform: scaleY(1);
+            transform-origin: top center;
+        }
+
+        input:focus~.top {
+            transform: scaleY(1);
+            transform-origin: right center;
+        }
+
+        .container {
+            height: 30px;
+            width: 250px;
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            transform: translate(-50%, -50%);
+        }
+
+        .container1 {
+            height: 30px;
+            width: 250px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .container2 {
+            height: 30px;
+            width: 250px;
+            position: absolute;
+            left: 50%;
+            top: 60%;
+            transform: translate(-50%, -50%);
+        }
+
+        .btn {
+            position: absolute;
+            left: 50%;
+            top: 54%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            padding: 5px;
+            width: 52%;
+            margin-top: 120px;
+            background-color: #4a4a4a;
+            color: #fff;
+        }
+
+        .btn2 {
+            position: absolute;
+            height: 35%;
+            top: 54%;
+            font-size: 150%;
+            border-radius: 15px;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            padding: 42px;
+            width: 25%;
+            margin-top: 40px;
+            background-color: #eaf6f9;
+            box-shadow: 5px 3px 10px rgb(52, 51, 51);
+            opacity:0.7;
+            color:  #040404;
+        }
+
+        .btnleft {
+            left: 35%;
+        }
+
+        .btnright {
+            left: 65%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="buydiv">
+        <div class="header2">操作确认</div>
+        <button type="button" class="btnleft btn2" onclick="showBuy()">确认买入</button>
+    </div>
+    <div id="salediv">
+        <button type="button" class="btnright btn2"  onclick="showSale()">确认卖出</button>
+    </div>
+    <div class="deal" id="comfirmbuydiv" style="display: none;">
+        <div class="header">确认买入</div>
+        <div class="container">
+            <input type="text" placeholder="请输入买入股价" id="buystocks"></input>
+        </div>
+        <div class="container1">
+            <input type="text" placeholder="请输入买入份数" id="buycoipes"></input>
+        </div>
+        <div class="container2">
+            <input type="text" placeholder="请输入买入总价" id="buysum"></input>
+        </div>
+        <button type="button" class="btn" onclick="doBuy()">确认买入</button>
+    </div>
+    <div class="deal" id="comfirmsalediv" style="display: none;">
+        <div class="header">确认卖出</div>
+        <div class="container">
+            <input type="text" placeholder="请输入卖出股价" id="salestocks"></input>
+        </div>
+        <div class="container1">
+            <input type="text" placeholder="请输入卖出份数" id="salecoipes"></input>
+        </div>
+        <div class="container2">
+            <input type="text" placeholder="请输卖出总价" id="salesum"></input>
+        </div>
+        <button type="button" class="btn" onclick="doSale()">确认卖出</button>
+    </div>
+    <div  id="comfirmsuccessdiv" style="display: none;">
+        <div class="header2">操作成功</div>
+    </div>
+    <div  id="comfirmfaildiv" style="display: none;">
+        <div class="header2">操作失败</div>
+    </div>
+    <div  id="serverfaildiv" style="display: none;">
+        <div class="header2">服务器返回错误</div>
+    </div>
+</body>
+<script>
+    function showBuy()
+    {
+        document.getElementById("comfirmbuydiv").style.display = "flex";
+        document.getElementById("buydiv").style.display = "none";
+        document.getElementById("salediv").style.display = "none";
+    }
+
+    function showSale() {
+            document.getElementById("comfirmsalediv").style.display = "flex";
+            document.getElementById("buydiv").style.display = "none";
+            document.getElementById("salediv").style.display = "none";
+        }
+
+    function doBuy() {
+        var buystocks = document.getElementById('buystocks');
+        var buycoipes = document.getElementById('buycoipes');
+        var buysum = document.getElementById('buysum');
+
+        if (!buystocks.value || !buycoipes.value || !buysum.value) {
+            alert("输入不能为空");
+            return;
+        }
+
+        if (isNaN(buystocks.value)) {
+            alert("股价入参非法");
+            return;
+        }
+        else if (isNaN(buycoipes.value)) {
+            alert("份数入参非法");
+            return;
+        }
+        else if (isNaN(buysum.value)) {
+            alert("成交额入参非法");
+            return;
+        }
+
+        var request;
+        if (window.XMLHttpRequest) {
+            request = new XMLHttpRequest();
+        }
+        else {
+            request = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        
+        request.onreadystatechange = function () {
+            if (request.readyState === 4) {
+                if (request.status === 200) {
+                    if (request.responseText == "success") {
+                        document.getElementById("comfirmbuydiv").style.display = "none"; 
+                        document.getElementById("comfirmsalediv").style.display = "none"; 
+                        document.getElementById("comfirmsuccessdiv").style.display = "flex";
+                    }
+                    else
+                    {
+                        document.getElementById("comfirmbuydiv").style.display = "none";
+                        document.getElementById("comfirmsalediv").style.display = "none"; 
+                        document.getElementById("comfirmfaildiv").style.display = "flex";
+                    }
+                } 
+                else {
+                    document.getElementById("comfirmbuydiv").style.display = "none";
+                    document.getElementById("comfirmsalediv").style.display = "none"; 
+                    document.getElementById("serverfaildiv").style.display = "flex";
+                }
+            }
+        };
+        request.open('POST', 'comfirmbuy');
+        request.send('params:stocks=' + buystocks.value + '&coipes=' + buycoipes.value + '&sum=' + buysum.value);
+    }
+    function doSale() {
+
+            var salestocks = document.getElementById('salestocks');
+            var salecoipes = document.getElementById('salecoipes');
+            var salesum = document.getElementById('salesum');
+
+            if (!salestocks.value || !salecoipes.value || !salesum.value) {
+                alert("输入不能为空");
+                return;
+            }
+
+            if (isNaN(salestocks.value)) {
+                alert("股价入参非法");
+                return;
+            } 
+            else if (isNaN(salecoipes.value)) {
+                alert("份数入参非法"); 
+                return;
+            }
+            else if (isNaN(salesum.value)) {
+                alert("成交额入参非法");
+                return;
+            }
+
+            var request;
+            if (window.XMLHttpRequest) {
+                request = new XMLHttpRequest();
+            }
+            else {
+                request = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+
+            request.onreadystatechange = function () {
+                if (request.readyState === 4) {
+                    if (request.status === 200) {
+                        if (request.responseText == "success") {
+                            document.getElementById("comfirmbuydiv").style.display = "none";
+                            document.getElementById("comfirmsalediv").style.display = "none";
+                            document.getElementById("comfirmsuccessdiv").style.display = "flex";
+                        }
+                        else {
+                            document.getElementById("comfirmbuydiv").style.display = "none";
+                            document.getElementById("comfirmsalediv").style.display = "none";
+                            document.getElementById("comfirmfaildiv").style.display = "flex";
+                        }
+                    }
+                    else {
+                        document.getElementById("comfirmbuydiv").style.display = "none";
+                        document.getElementById("comfirmsalediv").style.display = "none";
+                        document.getElementById("serverfaildiv").style.display = "flex";
+                    }
+                }
+            };
+
+            request.open('POST', 'comfirmsale');
+            request.send('params:stocks=' + salestocks.value + '&coipes=' + salecoipes.value + '&sum=' + salesum.value);
+        }
+</script>
+
+
+</html>

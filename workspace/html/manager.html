@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网格交易-管理页面</title>
+    <style>
+
+        html,
+        body {
+            height: 100%;
+            height: 100%;
+            background-color: #fff;
+        }
+
+        .deal {
+            width: 400px;
+            height: 588px;
+            border-radius: 15px;
+            padding: 0 50px;
+            position: relative;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+        }
+
+        .header {
+            font-size: 38px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 100px;    
+            position: absolute;
+            left: 34%;
+            top: 7%;
+            color: #4a4a4a;
+        }
+
+        .header2 {
+            font-size: 50px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 100px;    
+            position: absolute;
+            top: 15%;
+            width: 100%;
+            color: #4a4a4a;
+        }
+
+        input {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            outline: none;
+            border: none;
+            box-sizing: border-box;
+            padding-left: 5px;
+            background-color: #4a4a4a;
+            color: #61dafb;
+            caret-color: #61dafb;
+        }
+
+        input::placeholder {
+            color: #f2f7f8;
+        }
+
+        span {
+            position: absolute;
+            content: "";
+            display: block;
+            background-color: #4a4a4a;
+            transition: transform .1s ease-in-out;
+        }
+
+        .top,
+        .bottom {
+            left: 0px;
+            right: 0px;
+            height: 2px;
+        }
+
+        .left,
+        .right {
+            top: 0px;
+            bottom: 0px;
+            width: 2px;
+            transform: scaleY(0);
+        }
+
+        .top {
+            top: 0px;
+            transform: scaleX(0);
+            transform-origin: left center;
+            transition-delay: .2s;
+        }
+
+        .left {
+            left: 0px;
+            transform-origin: bottom center;
+            transition-delay: .3s;
+        }
+
+        .bottom {
+            bottom: 0px;
+        }
+
+        .right {
+            right: 0px;
+            transform-origin: top center;
+            transition-delay: .1s;
+        }
+
+        input:focus~.right {
+            transform: scaleY(1);
+            transform-origin: bottom center;
+        }
+
+        input:focus~.left {
+            transform: scaleY(1);
+            transform-origin: top center;
+        }
+
+        input:focus~.top {
+            transform: scaleY(1);
+            transform-origin: right center;
+        }
+
+        .container {
+            height: 30px;
+            width: 250px;
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            transform: translate(-50%, -50%);
+        }
+
+        .container1 {
+            height: 30px;
+            width: 250px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .container2 {
+            height: 30px;
+            width: 250px;
+            position: absolute;
+            left: 50%;
+            top: 60%;
+            transform: translate(-50%, -50%);
+        }
+
+        .btn {
+            position: absolute;
+            left: 50%;
+            top: 54%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            padding: 5px;
+            width: 52%;
+            margin-top: 120px;
+            background-color: #4a4a4a;
+            color: #fff;
+        }
+
+        .btn2 {
+            position: absolute;
+            height: 35%;
+            top: 54%;
+            font-size: 150%;
+            border-radius: 15px;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            padding: 42px;
+            width: 25%;
+            margin-top: 40px;
+            background-color: #eaf6f9;
+            box-shadow: 5px 3px 10px rgb(52, 51, 51);
+            opacity:0.7;
+            color:  #040404;
+        }
+
+        .btnleft {
+            left: 35%;
+        }
+
+        .btnright {
+            left: 65%;
+        }
+    </style>
+</head>
+
+<body>
+    <button onclick="show('GetPostionStat')">查看所有仓位</button>
+    <button onclick="show('GetAssertStat')">获取资产信息</button>
+    <button onclick="show('GetGridStat')">获取网格信息</button>
+    <button onclick="show('GetClosingPostionStat')">查看平仓信息</button>
+
+    <div id="res" style="display: none; white-space: pre-wrap;">这是返回结果</div>
+    <div  id="faildiv" style="display: none;">
+        <div class="header2">服务器返回错误</div>
+    </div>
+</body>
+<script>
+    function show(functionname) {
+        var request;
+        if (window.XMLHttpRequest) {
+            request = new XMLHttpRequest();
+        }
+        else {
+            request = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        
+        request.onreadystatechange = function () {
+            if (request.readyState === 4) {
+                if (request.status === 200) {
+                   
+                    document.getElementById("res").innerHTML =  request.responseText;                 
+                    document.getElementById("res").style.display = "flex";
+                } 
+                else {
+                    document.getElementById("serverfaildiv").style.display = "flex";
+                }
+            }
+        };
+
+        var res = document.getElementById('res');
+        request.open('POST', 'manager');
+        request.send('params:function=' + functionname);
+    }
+</script>
+</html>
