@@ -1,0 +1,8 @@
+{
+    "StockCode": "002415",
+    "TopStock": 60.0,
+    "LowStock": 15.0,
+    "InitAssert": 200000.0,
+    "GridWidth": 0.06,
+    "WidthCopies": 300
+}
