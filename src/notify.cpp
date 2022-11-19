@@ -2,6 +2,12 @@
 
 void notify::notify_zzh(uint64_t identify, const std::string &szTitle, const std::string &szMsg)
 {
+    if ((Lastidentify != 0) && (Lastidentify == identify))
+    {
+        return;
+    }
+    Lastidentify = identify;
+
     std::string strBuff;
 
     strBuff += "echo '";
@@ -14,5 +20,5 @@ void notify::notify_zzh(uint64_t identify, const std::string &szTitle, const std
     strBuff += "' zzhkikyou@163.com";
 
     LOG_WARN("发送通知到 zzh: \n%s", szMsg.c_str());
-    auto Res = ShellExec(strBuff);
+    ShellExec(strBuff);
 }

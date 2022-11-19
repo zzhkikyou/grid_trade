@@ -62,17 +62,18 @@ struct Response {
         strContent[content.size()] = '\0';
         return strContent;
     }
-
-    std::string &operator[](std::string str)
+    
+    std::string &operator[](const std::string &str)
     {
-        for (auto &it: headers)
+        auto it = std::find_if(headers.begin(), headers.end(), [&](const HeaderItem &Item) { return Item.name == str; });
+        if (it == headers.end())
         {
-            if (it.name == str)
-            {
-                return it.value;
-            }
+            return Empty;
         }
-        return Empty;
+        else
+        {
+            return it->value;
+        }
     }
 
     void Reset()

@@ -2,10 +2,10 @@
 CC = g++ -std=c++11 -g -Wall 
 
 #设置需要包含的头文件目录
-CFLAGS = -I../include  -I../include/httpparser 
+CFLAGS = -I../include  -I../include/httpparser -I../3rd
 
 #设置需要包含的动态库和静态库目录
-LFLAGS = -lpthread
+LFLAGS = -lpthread -lsqlite3
 
 #指定要链接的动态库或静态库
 LDEXEFLAGS = 
@@ -17,7 +17,7 @@ OBJDIR = build
 BINDIR = ../bin
 
 #设置存放.c和.cpp文件的目录
-SRCDIR += .
+SRCDIR += . ../3rd
 
 #设置可执行文件名字
 APP = grid_trade

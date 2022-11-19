@@ -16,11 +16,8 @@ public:
     struct Postion
     {
         Postion(uint64_t _TransationNo, double _Stocks, uint32_t _Copies, const std::string &_DealTime)
+            : TransationNo(_TransationNo), Stocks(_Stocks), Copies(_Copies), DealTime(_DealTime)
         {
-            TransationNo = _TransationNo;
-            Stocks       = _Stocks;
-            Copies       = _Copies;
-            DealTime     = _DealTime;
         }
         uint64_t                     TransationNo;               // 事务号
         double                       Stocks;                     // 股价

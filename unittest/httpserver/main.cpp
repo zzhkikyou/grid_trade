@@ -152,7 +152,7 @@ int main()
 
     Server server("", 9876, 10240);
 
-    server.SetfnOnConnected(OnConnected);
+    server.SetfnOnAccepted(OnConnected);
     server.SetfnOnDisconnected(OnDisconnected);
     server.SetfnOnMessage(OnMessage);
     server.SetfnOnRecvRawData(OnRecvRawData);

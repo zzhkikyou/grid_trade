@@ -23,6 +23,7 @@
 #include "shell_exec.h"
 #include "notify.h"
 #include "cJSON.h"
+#include "database.h"
 
 extern volatile bool g_bTerminated;
 inline bool IsTerminated()
@@ -58,19 +59,6 @@ inline PersistenceReader *GePersistenceReader()
     return lp4;
 }
 
-/** 写历史股价记录单例 */
-inline PersistenceWriter *GePersistenceStockWriter()
-{
-    static PersistenceWriter *lp5 = new PersistenceWriter;
-    return lp5;
-}
-
-/** 读历史股价记录单例 */
-inline PersistenceReader *GePersistenceStockReader()
-{
-    static PersistenceReader *lp6 = new PersistenceReader;
-    return lp6;
-}
 
 extern volatile bool g_bTest;
 
@@ -102,21 +90,17 @@ inline bool IsDealTime(int32_t &Hour, int32_t &Min, int32_t &DayInWeek)
 struct DealInfo
 {
     DealInfo(uint64_t _TransNo, double _Stocks, uint32_t _Copies, double _Sum, OperMode _eType, const std::string &szTime)
+        : TransNo(_TransNo), Stocks(_Stocks), Sum(_Sum), Copies(_Copies), eType(_eType)
     {
-        TransNo = _TransNo;
-        Stocks = _Stocks;
-        Copies = _Copies;
-        Sum = _Sum;
-        eType = _eType;
         strncpy(szDealTime, szTime.c_str(), sizeof(szDealTime));
         szDealTime[sizeof(szDealTime) - 1] = '\0';
     }
 
-    uint64_t TransNo;
-    double Stocks;
-    double Sum;
-    uint32_t Copies;
-    OperMode eType;
+    uint64_t TransNo = 0;
+    double Stocks = 0.0;
+    double Sum = 0.0;
+    uint32_t Copies = 0;
+    OperMode eType = OperMode::Buy;
     char szDealTime[32];
 };
 

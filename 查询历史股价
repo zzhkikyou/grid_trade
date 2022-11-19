@@ -1,0 +1,2 @@
+查询历史股价
+http://quotes.money.163.com/service/chddata.html?code=1002415&start=20071105&end=20150618&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP

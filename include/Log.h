@@ -41,6 +41,10 @@
 #include <string.h>
 #include <sys/syscall.h>
 
+#define LOG_PRE_DEFINE                         \
+    thread_local std::string Log::threadname_; \
+    thread_local uint32_t Log::tid_ = 0;
+
 #define gettidv() syscall(__NR_gettid)
 
 //  注册线程信息
@@ -156,6 +160,7 @@ public:
         static thread_local char logText[LOG_LINE_BUFF_SIZE];
         va_start(args, pLogText);
         vsnprintf(logText, LOG_LINE_BUFF_SIZE - 1, pLogText, args);
+        va_end(args);
         logText[LOG_LINE_BUFF_SIZE - 1] = '\0';
         WriteLog(logText, level);
     }
@@ -167,6 +172,7 @@ public:
         static thread_local char logText2[LOG_LINE_BUFF_SIZE];
         va_start(args, pLogText);
         vsnprintf(logText2, LOG_LINE_BUFF_SIZE - 1, pLogText, args);
+        va_end(args);
         logText2[LOG_LINE_BUFF_SIZE - 1] = '\0';
         return logText2;
     }
@@ -209,7 +215,7 @@ public:
                 onLogChange(level, szLogLine.str());
             }
 
-            szLogLine <<"\n";
+            szLogLine << "\n";
 
 #if defined LOG_DISABLE_LOG && LOG_DISABLE_LOG == 0
 
@@ -264,12 +270,8 @@ private:
     }
 
 public:
-    /* TODO 需要在main.cpp 中加上：
-        thread_local std::string Log::threadname_;
-        thread_local uint32_t Log::tid_ = 0;
-    */
-    static thread_local std::string threadname_; 
-    static thread_local uint32_t tid_;          
+    static thread_local std::string threadname_;
+    static thread_local uint32_t tid_;
 
 private:
     /** 写文件 */
@@ -279,4 +281,3 @@ private:
     volatile LEVEL level_ = LEVEL::INFO;
     volatile bool logdisable_ = true;
 };
-

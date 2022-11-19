@@ -33,7 +33,11 @@ class IHandler
 public:
     virtual ~IHandler()
     {
-        Close();
+        if (iFd_ != -1)
+        {
+            close(iFd_);
+            iFd_ = -1;
+        }
     }
     virtual int32_t GetFd() { return iFd_; };
     virtual void Close()
@@ -70,7 +74,7 @@ protected:
 class TimerHandler : public IHandler
 {
 public:
-    TimerHandler(uint64_t uIntervalUs, bool bOnce = false)
+    explicit TimerHandler(uint64_t uIntervalUs, bool bOnce = false)
     {
         eType_ = HandlerType::Timer;
         if ((iFd_ = timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK)) == -1)
@@ -167,12 +171,11 @@ class SocketServer : public SocketHandler
 public:
     ~SocketServer() {}
 
-    SocketServer(int32_t _iFd, const std::string &_Ip, uint16_t _Port)
+    SocketServer(int32_t _iFd, const std::string &_Ip, uint16_t _Port) 
+    : Ip_(_Ip), Port_(_Port)
     {
         eType_ = HandlerType::SocketServer;
         iFd_ = _iFd;
-        Ip_ = _Ip;
-        Port_ = _Port;
         SetNonBlocking();
     }
 
@@ -217,8 +220,7 @@ public:
             SetNonBlocking();
         }
 
-        int32_t iRet = 0;
-        if ((iRet = connect(iFd_, (sockaddr *)&sockserver_, (socklen_t)sizeof(sockaddr_in))) != 0)
+        if (connect(iFd_, (sockaddr *)&sockserver_, (socklen_t)sizeof(sockaddr_in)) != 0)
         {
             if (errno != EINPROGRESS)
             {

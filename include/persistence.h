@@ -15,9 +15,9 @@ namespace NSPersisTence
             return MARK == 1234321;
         }
 
-        uint32_t TransSize;
-        uint32_t version;
-        uint32_t FunctionID;
+        uint32_t TransSize = 0;
+        uint32_t version = 0;
+        uint32_t FunctionID = 0;
         uint32_t MARK = 1234321;
     };
 };

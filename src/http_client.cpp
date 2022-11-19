@@ -134,8 +134,6 @@ void HttpClient::OnMessage(const void *lpData, uint32_t uLength)
             bool bDealTime = IsDealTime(Hour, Min, DayInWeek);
             if (bDealTime)
             {
-                StockInfo Info(Stocks, GetLocalTime());
-                GePersistenceStockWriter()->Write(&Info, sizeof(StockInfo));
                 GetGridTrade()->Update(Stocks);
             }
             else

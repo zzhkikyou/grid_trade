@@ -9,6 +9,7 @@ public:
     notify() = default;
     ~notify() = default;
 
+    void ResetNotify() { Lastidentify = 0; }
     void notify_zzh(uint64_t identify, const std::string &szTitle, const std::string &szMsg);
 
 private:

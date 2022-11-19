@@ -11,6 +11,8 @@
 class GridTrade : public ITradeStrategy
 {
 public:
+    GridTrade() = default;
+    ~GridTrade() = default;
 
     // 压力位，阻力位，总资产，回调, 交易佣金比例, 网格宽度, 一格所含份数
     virtual void Init(double TopStock,

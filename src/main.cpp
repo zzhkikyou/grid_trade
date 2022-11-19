@@ -1,7 +1,6 @@
 #include "common.h"
 
-thread_local std::string Log::threadname_;
-thread_local uint32_t Log::tid_ = 0;
+LOG_PRE_DEFINE
 
 std::string szConfigPath;
 std::string szPrefix;
@@ -118,14 +117,6 @@ void InitStrategy(double TopStock, double LowStock, double Asset, double GridWid
 {
     GetGridTrade()->Init(TopStock, LowStock, Asset, OnSale, OnBuy, 0.0025, GridWidth, WidthCopies);
     LOG_INFO("初始化策略: 最高价: %.3lf 元, 最低价: %.3lf 元, 初始资产: %.3lf 元, 网格宽度: %.3lf, 份数: %lf", TopStock, LowStock, Asset, GridWidth, WidthCopies);
-
-    std::string DataPath = szPrefix + "_data";
-    ShellExec("mkdir -p " + DataPath);
-    auto TimeInfo = ResolveLocalTime(GetLocalTime());
-    std::string szStockInfo;
-    szStockInfo = DataPath + "/stocks_" + std::to_string(TimeInfo.Year) + "_" + std::to_string(TimeInfo.month) + "_" + std::to_string(TimeInfo.Day) + ".dat";
-    GePersistenceStockWriter()->Open(szStockInfo);
-    GePersistenceStockReader()->Open(szStockInfo);
 }
 
 void Replay()
@@ -137,7 +128,7 @@ void Replay()
     GePersistenceReader()->Open(DataPath + "/Deals.dat");
     DealInfo *lpInfo = nullptr;
     uint32_t Size = 0;
-    while ((!IsTerminated()) && ((lpInfo = (DealInfo *)GePersistenceReader()->Read(Size)) != nullptr))
+    while ((!IsTerminated()) && ((lpInfo = static_cast<DealInfo *>(GePersistenceReader()->Read(Size))) != nullptr))
     {
         if (lpInfo->eType == OperMode::Buy)
         {
@@ -223,6 +214,7 @@ void ReqStock()
         }
         else
         {
+            Notify.ResetNotify();
             client.RequestStock(httpAssem.GetData());
             std::this_thread::sleep_for(std::chrono::seconds(300)); // 非交易时间，则5分钟更新一次
         }
@@ -372,8 +364,8 @@ std::string GetAssertStat()
             cJSON_AddItemToObject(jDeal, "网格序号", jStockPostion);
             cJSON *jTransationNo = cJSON_CreateNumber(GetGridTrade()->GetDealAt(i).TransationNo);
             cJSON_AddItemToObject(jDeal, "事务号", jTransationNo);
-            cJSON *jCopies = cJSON_CreateNumber(GetGridTrade()->GetDealAt(i).Copies);
-            cJSON_AddItemToObject(jDeal, "份数", jCopies);
+            cJSON *jInnerCopies = cJSON_CreateNumber(GetGridTrade()->GetDealAt(i).Copies);
+            cJSON_AddItemToObject(jDeal, "份数", jInnerCopies);
             cJSON *jOper = cJSON_CreateString((GetGridTrade()->GetDealAt(i).Oper == OperMode::Buy) ? "买入" : "卖出");
             cJSON_AddItemToObject(jDeal, "操作类型", jOper);
             cJSON_AddItemToArray(jDeals, jDeal);
@@ -439,7 +431,7 @@ std::string GetClosingPostionStat()
     return Res;
 }
 
-int main(int argc, char *argv[])
+int main(int argc, const char *argv[])
 {
     REGTHREADINFO("main");
 

@@ -181,8 +181,8 @@ void GridTrade::Update(double Stocks)
         {
             LOG_DEBUG("建议买入股价 %.3lf 元, 份数 %u, 大概总开销 %.3lf 元, 当前剩余可用资产 %.3lf 元, 总份数 %u",
                       Stocks, Copies, CalBuyServiceFee(Stocks, Copies) + Stocks * Copies, FreeAssert_, TotalCopies_);
+            identify = Copies; // 要买入，标识等于份数
             BuyCallback_(identify, Stocks, Copies);
-            identify++;
         }
         else
         {
@@ -196,8 +196,8 @@ void GridTrade::Update(double Stocks)
         {
             LOG_DEBUG("建议卖出股价 %.3lf 元, 份数 %u, 大概总成交 %.3lf 元, 当前剩余可用资产 %.3lf 元, 总份数 %u",
                       Stocks, Copies, Stocks * Copies - CalSaleServiceFee(Stocks, Copies), FreeAssert_, TotalCopies_);
+            identify = (uint64_t)(1 - Copies); // 要卖出，标识等于负份数
             SaleCallback_(identify, Stocks, Copies);
-            identify++;
         }
         else
         {

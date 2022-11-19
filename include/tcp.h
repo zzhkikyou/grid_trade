@@ -27,7 +27,7 @@ class ServerConnection
 
 public:
     ServerConnection() = default;
-    ServerConnection(SocketServer *_lpHandler) : lpHandler_(_lpHandler) {}
+    explicit ServerConnection(SocketServer *_lpHandler) : lpHandler_(_lpHandler) {}
     ~ServerConnection()
     {
         delete lpHandler_;
@@ -102,6 +102,12 @@ public:
     void SetfnOnMessage(const std::function<void(ServerConnection *, void *, uint32_t)> &fn) { fnOnMessage_ = fn; }
     void SetfnOnAccepted(const std::function<void(ServerConnection *)> &fn) { fnOnAccepted_ = fn; }
     void SetfnOnDisconnected(const std::function<void(ServerConnection *)> &fn) { fnOnDisconnected_ = fn; };
+    
+    uint32_t GetOnlineSize()
+    {
+        std::unique_lock<std::recursive_mutex> lock(Loop_.GetMutex());
+        return Connections_.size();
+    }
 
 private:
 
@@ -315,11 +321,6 @@ private:
         Connections_.erase(lpConn->GetHandler()->GetFd());
     }
 
-    uint32_t GetOnlineSize()
-    {
-        return Connections_.size();
-    }
-
 private:
     SocketAcceptor AcceptorH_;
 
@@ -344,7 +345,7 @@ class ClientConnection
 
 public:
     ClientConnection() = default;
-    ClientConnection(SocketClient *_lpHandler) : lpHandler_(_lpHandler) {}
+    explicit ClientConnection(SocketClient *_lpHandler) : lpHandler_(_lpHandler) {}
     ~ClientConnection()
     {
         delete lpHandler_;
